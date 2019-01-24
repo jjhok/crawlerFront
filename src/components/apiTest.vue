@@ -9,10 +9,11 @@
                 </v-card-title>
                 <v-layout row justify-space-around align-start fill-height>
                     <v-flex xs6>
-                        <v-select @input="log"
+                        <v-select 
                             :items="crawlingMethodLists"
                             v-model="crawlingMethod"
                             label="Crawling Method"
+                            @input="getTemplate"
                         ></v-select>
                     </v-flex>
                     <v-flex xs3>
@@ -23,11 +24,8 @@
                             ></v-switch>
                     </v-flex>
                 </v-layout>
-                <v-layout row wrap justify-space-around>
-                    <v-text-field v-if="login" class="input-text" label="ID" v-model="id"></v-text-field>
-                    <v-text-field v-if="login" class="input-text" type="password" label="Password" v-model="pwd"></v-text-field>
-                </v-layout>
-                <v-text-field class="input-text" label="URL" v-model="url"></v-text-field>
+                <InputDictTemplate v-if="login" class="input-text" :defaultTemplate="template" @update="updateTemplate" />
+                <v-text-field class="input-text" label="URL" v-model="url" ></v-text-field>
                 <v-layout row wrap justify-end="">
                     <v-btn class="item" color="info" @click="getData">TEST!!</v-btn>
                 </v-layout>
@@ -40,38 +38,51 @@
 <script>
     import axios from 'axios';
     import OutputBox from './OutputBox.vue'
+    import InputDictTemplate from './InputDictTemplate.vue';
 
     export default {
         components: {
-            OutputBox,
+            OutputBox,InputDictTemplate
+        },
+        mounted() {
+            this.getTemplate();
         },
         data() {
             return {
                 login: false,
-                id: "",
-                pwd: "",
                 url: "",
                 response: null,
                 crawlingMethodLists: ['bs4', 'selenium'],
-                crawlingMethod: "",
+                crawlingMethod: 'bs4',
+                template: "",
             }
         },
         methods: {
-            log() {
-                console.log(this.crawlingMethod);
+            updateTemplate(temp) {
+                console.log("update");
+                console.log(temp);
+                
+            },
+            getTemplate() {
+                axios.get('api/template/login', {
+                    params: {
+                        method: this.crawlingMethod
+                    }
+                })
+                .then(response => {
+                    this.template = response.data;
+                }).catch(response => {
+                    console.log(response);
+                })
             },
             getData() {
                 var params = {
                         url: this.url,
-                        id: this.id,
-                        pwd: this.pwd,
-                        method: this.crawlingMethod
+                        method: this.crawlingMethod,
+                        inputDict: this.template,
                     };
-                console.log(params);
 
-                axios.post('/api/test/login', {
-                        hello: 'world'
-                    })
+                axios.post('/api/test/login', params)
                 .then((response) => {
                     this.response = response.data;
                 }).catch((response) => {
