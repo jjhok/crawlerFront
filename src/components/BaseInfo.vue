@@ -28,6 +28,7 @@
                 <v-text-field class="input-text" label="URL" v-model="url" placeholder="http://"></v-text-field>
                 <v-layout row wrap justify-end="">
                     <v-btn class="item" color="info" @click="submit" :loading="isLoading">TEST!!</v-btn>
+                    <v-btn class="item" color="primary" @click="save" :loading="isLoading">SAVE</v-btn>
                 </v-layout>
                 <OutputBox v-if="response" class="input-text" :msg="response" />
             </v-card>
@@ -77,7 +78,7 @@
             submit() {
                 this.response = null;
                 this.isLoading = true;
-                
+
                 var params = {
                         login: this.login,
                         url: this.url,
@@ -106,6 +107,12 @@
                     this.isLoading = false;
                 })
             },
+            save() {
+                this.$inputDict['method'] = this.crawlingMethod;
+                this.$inputDict['login'] = this.login;
+                this.$inputDict['loginUrl'] = this.url;
+                this.$inputDict['loginTemplate'] = this.template;
+            },
             _toJSON(template) {
                 let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
                 let correct = template.replace(/\n/gmi, "").trim().replace(regex, ''); 
@@ -132,7 +139,7 @@
  .item {
     min-height: 50px;
     min-width: 80px;
-    margin: 20px;
+    margin: 10px;
   }
   .input-text {
       margin-left: 20px;

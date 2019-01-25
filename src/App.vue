@@ -16,13 +16,15 @@
     </v-toolbar>
 
     <v-content>
-      <apiTest/>
+      <BaseInfo/>
+      <URLParse />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import apiTest from './components/apiTest.vue'
+import BaseInfo from './components/BaseInfo.vue'
+import URLParse from './components/URLParse.vue'
 import axios from 'axios';
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -31,7 +33,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export default {
   name: 'App',
   components: {
-    apiTest
+    BaseInfo,URLParse
   },
   data () {
     return {
