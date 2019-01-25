@@ -2,7 +2,7 @@
     <div id="login">
         <v-layout column wrap class="ma-2">
             <v-card>
-                <v-card-title primary-title>
+                <v-card-title primary-title >
                     <div>
                         <h3 class="headline mb-0">기본 정보</h3>
                     </div>
@@ -27,7 +27,7 @@
                 <InputDictTemplate v-if="login" class="input-text" :defaultTemplate="template" @update="updateTemplate" />
                 <v-text-field class="input-text" label="URL" v-model="url" placeholder="http://"></v-text-field>
                 <v-layout row wrap justify-end="">
-                    <v-btn class="item" color="info" @click="submit">TEST!!</v-btn>
+                    <v-btn class="item" color="info" @click="submit" :loading="isLoading">TEST!!</v-btn>
                 </v-layout>
                 <OutputBox v-if="response" class="input-text" :msg="response" />
             </v-card>
@@ -55,6 +55,7 @@
                 crawlingMethodLists: ['bs4', 'selenium'],
                 crawlingMethod: 'bs4',
                 template: "",
+                isLoading: false,
             }
         },
         methods: {
@@ -75,14 +76,20 @@
             },
             submit() {
                 this.response = null;
+                this.isLoading = true;
                 
                 var params = {
+                        login: this.login,
                         url: this.url,
                         method: this.crawlingMethod,
                     };
                 
                 if (this.login) {
                     var jsonTemplate = this._toJSON(this.template);
+                    if (jsonTemplate === null) {
+                        this.isLoading = false;
+                        return;
+                    }
                     params['inputDict'] = jsonTemplate;
                 }
 
@@ -95,12 +102,15 @@
                     this.response = response.data;
                 }).catch((response) => {
                     this.response = response;
-                    console.log("response");
+                }).then(() => {
+                    this.isLoading = false;
                 })
             },
             _toJSON(template) {
                 let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
-                let correct = template.replace(/\n/gmi, "").replace(/\'/gmi,"\"").trim().replace(regex, ''); 
+                let correct = template.replace(/\n/gmi, "").trim().replace(regex, ''); 
+                // let correct = template.replace(/\n/gmi, "").replace(/\'/gmi,"\"").trim().replace(regex, ''); 
+                console.log(correct);
                 let json = null;
                 try {
                     json = JSON.parse(correct);

@@ -6,7 +6,7 @@
             textarea
             readonly
             rows="15"
-            box
+            outline
             :value="JSON.stringify(msg)"
         ></v-textarea>
     </div>
