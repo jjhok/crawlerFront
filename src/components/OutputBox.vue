@@ -5,6 +5,8 @@
             name="name"
             textarea
             readonly
+            rows="15"
+            box
             :value="JSON.stringify(msg)"
         ></v-textarea>
     </div>

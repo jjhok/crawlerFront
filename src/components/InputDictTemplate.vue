@@ -1,10 +1,11 @@
 <template>
     <div>
         <v-textarea
-            label="Input object"
-            :value="template"
-            rows="10"
+            label="Config"
+            :value="defaultTemplate"
+            rows="8"
             auto-grow
+            box
             @input="updateTemplate"
         ></v-textarea>
     </div>
@@ -18,19 +19,14 @@
                 default: ""
             },
         },
-        watch: {
-            defaultTemplate(newValue, oldValue) {
-                this.template = newValue;
-            }
-        },
         data() {
             return {
                 template: ""
             }
         },
         methods: {
-            updateTemplate() {
-                this.$emit('update', this.template);
+            updateTemplate(newValue) {
+                this.$emit('update', newValue);
             }
         },
     }

@@ -25,9 +25,9 @@
                     </v-flex>
                 </v-layout>
                 <InputDictTemplate v-if="login" class="input-text" :defaultTemplate="template" @update="updateTemplate" />
-                <v-text-field class="input-text" label="URL" v-model="url" ></v-text-field>
+                <v-text-field class="input-text" label="URL" v-model="url" placeholder="http://"></v-text-field>
                 <v-layout row wrap justify-end="">
-                    <v-btn class="item" color="info" @click="getData">TEST!!</v-btn>
+                    <v-btn class="item" color="info" @click="submit">TEST!!</v-btn>
                 </v-layout>
                 <OutputBox v-if="response" class="input-text" :msg="response" />
             </v-card>
@@ -58,10 +58,8 @@
             }
         },
         methods: {
-            updateTemplate(temp) {
-                console.log("update");
-                console.log(temp);
-                
+            updateTemplate(newValue) {
+                this.template = newValue;
             },
             getTemplate() {
                 axios.get('api/template/login', {
@@ -75,19 +73,43 @@
                     console.log(response);
                 })
             },
-            getData() {
+            submit() {
+                this.response = null;
+                
                 var params = {
                         url: this.url,
                         method: this.crawlingMethod,
-                        inputDict: this.template,
                     };
+                
+                if (this.login) {
+                    var jsonTemplate = this._toJSON(this.template);
+                    params['inputDict'] = jsonTemplate;
+                }
 
-                axios.post('/api/test/login', params)
+                axios.post('/api/test/login', params, {
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                })
                 .then((response) => {
                     this.response = response.data;
                 }).catch((response) => {
-                    console.log(response);
+                    this.response = response;
+                    console.log("response");
                 })
+            },
+            _toJSON(template) {
+                let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+                let correct = template.replace(/\n/gmi, "").replace(/\'/gmi,"\"").trim().replace(regex, ''); 
+                let json = null;
+                try {
+                    json = JSON.parse(correct);
+                } catch(e) {
+                    alert(e);
+                } finally {
+                    return json;
+                }
+                
             }
         },
     }
