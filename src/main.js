@@ -4,7 +4,6 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-Vue.prototype.$detailPageCount = 1
 Vue.prototype.$inputDict = {}
 
 new Vue({

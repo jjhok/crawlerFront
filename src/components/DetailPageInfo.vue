@@ -78,7 +78,7 @@ import axios from 'axios';
                         .then(response => {
                             this.$inputDict['pageUrls'] = response.data;
                             this.response = response.data;
-                            this.$detailPageCount++;
+                            this.$emit('add');
                         }).catch(response => {
                             console.log(response)
                         })

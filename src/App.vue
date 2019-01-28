@@ -17,8 +17,8 @@
     <v-content>
       <BaseInfo />
       <URLParseInfo />
-      <div v-for="item in this.$detailPageCount" :key="item.id">
-        <DetailPageInfo />
+      <div v-for="item in detailInfoPages" :key="item.id">
+        <DetailPageInfo @add="addDetailInfoPage" />
       </div>
     </v-content>
   </v-app>
@@ -37,6 +37,16 @@ export default {
   name: 'App',
   components: {
     BaseInfo,URLParseInfo, DetailPageInfo
+  },
+  methods: {
+    addDetailInfoPage() {
+      this.detailInfoPages.push(DetailPageInfo);
+    }
+  },
+  data() {
+    return {
+      detailInfoPages: [DetailPageInfo]
+    }
   },
 }
 </script>
