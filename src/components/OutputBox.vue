@@ -16,7 +16,7 @@
     export default {
         props: {
             msg: {
-                type: Object,
+                type: Object | String | Array,
                 default: ""
             },
         },

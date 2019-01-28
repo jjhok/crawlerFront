@@ -27,8 +27,8 @@
                 <InputDictTemplate v-if="login" class="input-text" :defaultTemplate="template" @update="updateTemplate" />
                 <v-text-field class="input-text" label="URL" v-model="url" placeholder="http://"></v-text-field>
                 <v-layout row wrap justify-end="">
-                    <v-btn class="item" color="info" @click="submit" :loading="isLoading">TEST!!</v-btn>
-                    <v-btn class="item" color="primary" @click="save" :loading="isLoading">SAVE</v-btn>
+                    <v-btn class="item" color="info" @click="submit" :loading="isLoading">TEST</v-btn>
+                    <v-btn class="item" color="primary" @click="save" :loading="isSaving">SAVE</v-btn>
                 </v-layout>
                 <OutputBox v-if="response" class="input-text" :msg="response" />
             </v-card>
@@ -57,6 +57,7 @@
                 crawlingMethod: 'bs4',
                 template: "",
                 isLoading: false,
+                isSaving: false,
             }
         },
         methods: {
@@ -101,17 +102,26 @@
                 })
                 .then((response) => {
                     this.response = response.data;
+                    console.log(this.response);
+
                 }).catch((response) => {
+                    console.log(response);
                     this.response = response;
                 }).then(() => {
                     this.isLoading = false;
                 })
             },
             save() {
+                this.isSaving = true;
+                
                 this.$inputDict['method'] = this.crawlingMethod;
                 this.$inputDict['login'] = this.login;
                 this.$inputDict['loginUrl'] = this.url;
                 this.$inputDict['loginTemplate'] = this.template;
+                
+                setTimeout(() => {
+                    this.isSaving = false;
+                }, 1000)
             },
             _toJSON(template) {
                 let regex = /\,(?!\s*?[\{\[\"\'\w])/g;

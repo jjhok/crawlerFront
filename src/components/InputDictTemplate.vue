@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-textarea
-            label="Config - 따옴표 주의"
+            :label="label"
             :value="defaultTemplate"
             rows="8"
             auto-grow
@@ -15,8 +15,12 @@
 <script>
     export default {
         props: {
-            defaultTemplate: {
+            label: {
                 type: String,
+                default: "Input Dictionary"
+            },
+            defaultTemplate: {
+                type: String | Array,
                 default: ""
             },
         },

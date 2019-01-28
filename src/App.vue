@@ -2,8 +2,7 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>JH Crawler</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
@@ -16,15 +15,19 @@
     </v-toolbar>
 
     <v-content>
-      <BaseInfo/>
-      <URLParse />
+      <BaseInfo />
+      <URLParseInfo />
+      <div v-for="item in this.$detailPageCount" :key="item.id">
+        <DetailPageInfo />
+      </div>
     </v-content>
   </v-app>
 </template>
 
 <script>
 import BaseInfo from './components/BaseInfo.vue'
-import URLParse from './components/URLParse.vue'
+import URLParseInfo from './components/URLParseInfo.vue'
+import DetailPageInfo from './components/DetailPageInfo.vue';
 import axios from 'axios';
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -33,12 +36,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export default {
   name: 'App',
   components: {
-    BaseInfo,URLParse
+    BaseInfo,URLParseInfo, DetailPageInfo
   },
-  data () {
-    return {
-      //
-    }
-  }
 }
 </script>

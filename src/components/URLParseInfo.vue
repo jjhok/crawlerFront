@@ -18,10 +18,10 @@
                     <v-text-field v-if="isSerial" class="input-text" label="Start number" v-model="startNum" placeholder="0"></v-text-field>
                     <v-text-field v-if="isSerial" class="input-text" label="End number" v-model="endNum" placeholder="0"></v-text-field>
                 </v-layout>
-                <InputDictTemplate class="input-text" :defaultTemplate="template" @update="updateTemplate" />
+                <InputDictTemplate class="input-text" :defaultTemplate="template" label="Parsing 을 위한 Array" @update="updateTemplate" />
                 <v-layout row wrap justify-end="">
-                    <v-btn class="item" color="info" @click="submit">TEST!!</v-btn>
-                    <v-btn class="item" color="primary" @click="save">SAVE</v-btn>
+                    <v-btn class="item" color="info" @click="submit">TEST</v-btn>
+                    <v-btn class="item" color="primary" @click="save" :loading="isSaving" >SAVE</v-btn>
                 </v-layout>
                 <OutputBox v-if="response.length > 1" class="input-text" :msg="response" />
             </v-card>
@@ -32,7 +32,6 @@
 <script>
 import OutputBox from './OutputBox.vue';
 import InputDictTemplate from './InputDictTemplate.vue';
-import { try } from 'q';
 
     export default {
         components: {
@@ -46,6 +45,7 @@ import { try } from 'q';
                 isSerial: false,
                 startNum: 0,
                 endNum: 0,
+                isSaving: false,
             }
         },
         watch: {
@@ -70,17 +70,32 @@ import { try } from 'q';
         },
         methods: {
             updateTemplate(newValue) {
-                this.template = eval(newValue);
-                console.log(this.template);
+                this.template = newValue;
             },
             submit() {
                 this.response = [];
-                this.template.forEach((element) => {
+                var templateData = [];
+                switch (typeof(this.template)) {
+                    case "string":
+                        templateData = this.template.split(',');
+                        break;
+                    case "object":
+                        templateData = eval(this.template);
+                        break;
+                    default:
+                        break;
+                }
+                templateData.forEach((element) => {
                     this.response.push(this.url.replace('{variable}', element));
                 })
             },
             save() {
-
+                this.isSaving = true;
+                this.$inputDict['pageUrls'] = this.response;
+                
+                setTimeout(() => {
+                    this.isSaving = false;
+                }, 1000)
             }
         },
     }
