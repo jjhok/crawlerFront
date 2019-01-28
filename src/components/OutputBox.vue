@@ -7,7 +7,7 @@
             readonly
             rows="15"
             outline
-            :value="JSON.stringify(msg)"
+            :value="JSON.stringify(msg, null, 2)"
         ></v-textarea>
     </div>
 </template>
