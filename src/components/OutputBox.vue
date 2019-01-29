@@ -5,9 +5,10 @@
             name="name"
             textarea
             readonly
-            rows="15"
+            :rows="rows"
+            :loading="loading"
             outline
-            :value="JSON.stringify(msg, null, 2)"
+            :value="JSON.stringify(msg, null, 4)"
         ></v-textarea>
     </div>
 </template>
@@ -19,6 +20,14 @@
                 type: Object | String | Array,
                 default: ""
             },
+            rows: {
+                type: String,
+                default: "15"
+            },
+            loading: {
+                type: Boolean,
+                default: false
+            }
         },
     }
 </script>

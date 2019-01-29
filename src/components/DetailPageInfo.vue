@@ -3,16 +3,18 @@
         <v-layout column wrap class="ma-2">
             <v-card>
                 <v-card-title primary-title >
-                    <div>
+                    <v-layout row wrap justify-space-between>
                         <h3 class="headline mb-0">Detail Page Info</h3>
-                    </div>
+                        <v-icon @click="removeSelf">close</v-icon>
+                    </v-layout>
                 </v-card-title>
                 <InputDictTemplate class="input-text" :defaultTemplate="template" @update="updateTemplate" />
                 <v-layout row wrap justify-end>
-                    <v-btn class="item" color="info" @click="submit(true)" :loading="isSaving" >SAVE and next DETAIL PAGES</v-btn>
-                    <v-btn class="item" color="primary" @click="submit(false)" :loading="isLoading">GO</v-btn>
+                    <v-btn class="item" color="info" @click="submit(false)" :loading="isLoading">TEST</v-btn>
+                    <v-btn class="item" color="info" @click="submit(true)" :loading="isLoading" >대상 URL update<br>(Nested Page)</v-btn>
+                    <v-btn class="item" color="primary" @click="save" :loading="isSaving" >SAVE</v-btn>
                 </v-layout>
-                <OutputBox v-if="response.length > 1" class="input-text" :msg="response" />
+                <OutputBox v-if="response.length > 0" class="input-text" :msg="response" />
             </v-card>
         </v-layout>
     </div>
@@ -41,6 +43,9 @@ import axios from 'axios';
             this.getTemplate();
         },
         methods: {
+            removeSelf() {
+                this.$emit('remove');
+            },
             getTemplate() {
                 axios.get('/api/template/detailPage', {
                     params: {
@@ -63,7 +68,7 @@ import axios from 'axios';
                     urls: this.$inputDict['pageUrls'],
                     inputDict: this._toJSON(this.template)
                 }
-                axios.post('api/test/nestedPage', params).then(response => {
+                axios.post('api/test/singlePage', params).then(response => {
                     this.response = response.data;
 
                     if (isURLUpdate) {
@@ -89,6 +94,9 @@ import axios from 'axios';
                 }).then(() => {
                     this.isLoading = false;
                 })
+            },
+            save() {
+                this.$inputDict['selectorDict'] = this._toJSON(this.template);
             },
             _toJSON(template) {
                 let regex = /\,(?!\s*?[\{\[\"\'\w])/g;

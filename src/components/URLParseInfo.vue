@@ -9,7 +9,7 @@
                 </v-card-title>
                 <v-layout row wrap>
                     <v-flex xs8>
-                        <v-text-field class="input-text" label="URL with {variable}" v-model="url" placeholder="http://"></v-text-field>
+                        <v-text-field class="input-text" label="URL with {var}" v-model="url" placeholder="http://"></v-text-field>
                     </v-flex>
                     <v-spacer></v-spacer>
                     <v-switch label="Serial data" v-model="isSerial" @change="!isSerial"></v-switch>
@@ -18,12 +18,12 @@
                     <v-text-field v-if="isSerial" class="input-text" label="Start number" v-model="startNum" placeholder="0"></v-text-field>
                     <v-text-field v-if="isSerial" class="input-text" label="End number" v-model="endNum" placeholder="0"></v-text-field>
                 </v-layout>
-                <InputDictTemplate class="input-text" :defaultTemplate="template" label="Parsing 을 위한 Array" @update="updateTemplate" />
+                <InputDictTemplate class="input-text" :defaultTemplate="template" label="Parsing 을 위한 Array" rows="5" @update="updateTemplate" />
                 <v-layout row wrap justify-end="">
                     <v-btn class="item" color="info" @click="submit">TEST</v-btn>
                     <v-btn class="item" color="primary" @click="save" :loading="isSaving" >SAVE</v-btn>
                 </v-layout>
-                <OutputBox v-if="response.length > 1" class="input-text" :msg="response" />
+                <OutputBox v-if="response.length > 0" class="input-text" :msg="response"/>
             </v-card>
         </v-layout>
     </div>
@@ -86,7 +86,11 @@ import InputDictTemplate from './InputDictTemplate.vue';
                         break;
                 }
                 templateData.forEach((element) => {
-                    this.response.push(this.url.replace('{variable}', element));
+                    var target = element;
+                    if (typeof(element) === "string") {
+                        target = element.trim();
+                    }
+                    this.response.push(this.url.replace('{var}', target));
                 })
             },
             save() {

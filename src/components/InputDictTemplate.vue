@@ -3,7 +3,7 @@
         <v-textarea
             :label="label"
             :value="defaultTemplate"
-            rows="8"
+            :rows="rows"
             auto-grow
             box
             counter
@@ -23,6 +23,10 @@
                 type: String | Array,
                 default: ""
             },
+            rows: {
+                type: String,
+                default: "10"
+            }
         },
         data() {
             return {

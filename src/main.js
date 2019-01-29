@@ -4,7 +4,9 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-Vue.prototype.$inputDict = {}
+Vue.prototype.$inputDict = {
+  method: 'bs4',
+}
 
 new Vue({
   render: h => h(App),

@@ -7,25 +7,24 @@
                         <h3 class="headline mb-0">기본 정보</h3>
                     </div>
                 </v-card-title>
-                <v-layout row justify-space-around align-start fill-height>
-                    <v-flex xs6>
+                <v-text-field class="input-text" label="Base URL" v-model="baseUrl" placeholder="http://"></v-text-field>
+                <v-layout row>
                         <v-select 
+                            class="ml-4"
                             :items="crawlingMethodLists"
                             v-model="crawlingMethod"
                             label="Crawling Method"
                             @input="getTemplate"
                         ></v-select>
-                    </v-flex>
-                    <v-flex xs3>
+                        <v-spacer></v-spacer>
                         <v-switch
                             class="item"
                             label="LOG IN"
                             v-model="login"
                             ></v-switch>
-                    </v-flex>
                 </v-layout>
+                <v-text-field class="input-text" v-if="login" label="Login URL" v-model="loginUrl" placeholder="http://"></v-text-field>
                 <InputDictTemplate v-if="login" class="input-text" :defaultTemplate="template" @update="updateTemplate" />
-                <v-text-field class="input-text" label="URL" v-model="url" placeholder="http://"></v-text-field>
                 <v-layout row wrap justify-end="">
                     <v-btn class="item" color="info" @click="submit" :loading="isLoading">TEST</v-btn>
                     <v-btn class="item" color="primary" @click="save" :loading="isSaving">SAVE</v-btn>
@@ -45,19 +44,27 @@
         components: {
             OutputBox,InputDictTemplate
         },
-        mounted() {
-            this.getTemplate();
-        },
         data() {
             return {
                 login: false,
-                url: "",
+                baseUrl: "",
+                loginUrl: "",
                 response: null,
                 crawlingMethodLists: ['bs4', 'selenium'],
                 crawlingMethod: 'bs4',
                 template: "",
                 isLoading: false,
                 isSaving: false,
+            }
+        },
+        watch: {
+            crawlingMethod(newValue, oldValue) {
+                console.log(newValue);
+            },
+            login(newValue, oldValue) {
+                if (newValue === true) {
+                    this.getTemplate();
+                }
             }
         },
         methods: {
@@ -82,7 +89,8 @@
 
                 var params = {
                         login: this.login,
-                        url: this.url,
+                        baseUrl: this.baseUrl,
+                        loginUrl: this.loginUrl,
                         method: this.crawlingMethod,
                     };
                 
@@ -116,8 +124,12 @@
                 
                 this.$inputDict['method'] = this.crawlingMethod;
                 this.$inputDict['login'] = this.login;
-                this.$inputDict['loginUrl'] = this.url;
-                this.$inputDict['loginTemplate'] = this.template;
+                this.$inputDict['baseUrl'] = this.baseUrl;
+
+                if (this.login === true) {
+                    this.$inputDict['loginUrl'] = this.loginUrl;
+                    this.$inputDict['loginTemplate'] = this._toJSON(this.template);
+                }
                 
                 setTimeout(() => {
                     this.isSaving = false;
@@ -127,7 +139,6 @@
                 let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
                 let correct = template.replace(/\n/gmi, "").trim().replace(regex, ''); 
                 // let correct = template.replace(/\n/gmi, "").replace(/\'/gmi,"\"").trim().replace(regex, ''); 
-                console.log(correct);
                 let json = null;
                 try {
                     json = JSON.parse(correct);
