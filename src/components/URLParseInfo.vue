@@ -21,7 +21,7 @@
                 <InputDictTemplate class="input-text" :defaultTemplate="template" label="Parsing 을 위한 Array" rows="5" @update="updateTemplate" />
                 <v-layout row wrap justify-end="">
                     <v-btn class="item" color="info" @click="submit">TEST</v-btn>
-                    <v-btn class="item" color="primary" @click="save; $vuetify.goTo('#detailpageinfo', {offset: -70});" :loading="isSaving" >SAVE</v-btn>
+                    <v-btn class="item" color="primary" @click="save(); $vuetify.goTo('#detailpageinfo', {offset: -70});" :loading="isSaving" >SAVE</v-btn>
                 </v-layout>
                 <OutputBox v-if="response.length > 0" class="input-text" :msg="response"/>
             </v-card>
@@ -85,6 +85,11 @@ import InputDictTemplate from './InputDictTemplate.vue';
                     default:
                         break;
                 }
+
+                if (templateData.length === 0) {
+                    this.response.push(this.url);
+                }
+
                 templateData.forEach((element) => {
                     var target = element;
                     if (typeof(element) === "string") {

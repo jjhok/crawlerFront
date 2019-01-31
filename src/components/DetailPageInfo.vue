@@ -12,7 +12,7 @@
                 <v-layout row wrap justify-end>
                     <v-btn class="item" color="info" @click="submit(false)" :loading="isLoading">TEST</v-btn>
                     <v-btn class="item" color="info" @click="submit(true)" :loading="isLoading" >대상 URL update<br>(Nested Page)</v-btn>
-                    <v-btn class="item" color="primary" @click="save; $vuetify.goTo('#crawler', {offset: -70});" :loading="isSaving" >SAVE</v-btn>
+                    <v-btn class="item" color="primary" @click="save(); $vuetify.goTo('#crawler', {offset: -70});" :loading="isSaving" >SAVE</v-btn>
                 </v-layout>
                 <OutputBox v-if="response.length > 0" class="input-text" :msg="response" />
             </v-card>
