@@ -1,5 +1,5 @@
 <template>
-    <div id="textExample">
+    <div id="outputtable">
         <v-data-table
             :headers="headers"
             :items="response"

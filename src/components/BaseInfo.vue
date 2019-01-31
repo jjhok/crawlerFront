@@ -1,5 +1,5 @@
 <template>
-    <div id="login">
+    <div id="baseinfo">
         <v-layout column wrap class="ma-2">
             <v-card>
                 <v-card-title primary-title >
@@ -27,7 +27,7 @@
                 <InputDictTemplate v-if="login" class="input-text" :defaultTemplate="template" @update="updateTemplate" />
                 <v-layout row wrap justify-end="">
                     <v-btn class="item" color="info" @click="submit" :loading="isLoading">TEST</v-btn>
-                    <v-btn class="item" color="primary" @click="save" :loading="isSaving">SAVE</v-btn>
+                    <v-btn class="item" color="primary" @click="save; $vuetify.goTo('#urlparseinfo', {offset: -70});" :loading="isSaving">SAVE</v-btn>
                 </v-layout>
                 <OutputBox v-if="response" class="input-text" :msg="response" />
             </v-card>

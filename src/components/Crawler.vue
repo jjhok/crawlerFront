@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="crawler">
         <v-layout column wrap class="ma-2">
             <v-card>
                 <v-card-title primary-title >
@@ -11,7 +11,7 @@
                         </span>
                     </v-layout>
                 </v-card-title>
-                <InputDictTemplate class="input-text" :defaultTemplate="template"/>
+                <InputDictTemplate class="input-text" :defaultTemplate="template" rows="5"/>
                 <OutputTable :response='response' />
             </v-card>
         </v-layout>
